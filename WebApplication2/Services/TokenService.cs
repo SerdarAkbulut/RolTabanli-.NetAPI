@@ -1,47 +1,53 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using WebApplication2.Entity;
+﻿    using Microsoft.AspNetCore.Identity;
+    using Microsoft.IdentityModel.Tokens;
+    using System.Data;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using System.Text;
+    using WebApplication2.Entity;
 
-namespace WebApplication2.Services
-{
-    public class TokenService
+    namespace WebApplication2.Services
     {
-        private readonly IConfiguration _config;
-        private readonly UserManager<User> _userManager;
-        public TokenService(UserManager<User> userManager, IConfiguration config)
+        public class TokenService
         {
-            _userManager = userManager;
-            _config = config;
-        }
-        public async Task<String> GenerateToken(User user)
-        {
-            var claims = new List<Claim>
+            private readonly IConfiguration _config;
+            private readonly UserManager<User> _userManager;
+            public TokenService(UserManager<User> userManager, IConfiguration config)
             {
-                 new Claim(ClaimTypes.Email, user.Email!),
-                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                 new Claim(ClaimTypes.Name, user.UserName!),
-            };
+                _userManager = userManager;
+                _config = config;
+            }
 
-
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["JWTSecurity:SecretKey"]!));
-
-            var tokenSettings = new SecurityTokenDescriptor
+            public async Task<String> GenerateToken(User user)
             {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(30),
-                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
-            };
+                var roles = await _userManager.GetRolesAsync(user);
+                var role =  roles.FirstOrDefault(); 
 
-            var token = tokenHandler.CreateToken(tokenSettings);
 
-            return tokenHandler.WriteToken(token);
+                var claims = new List<Claim>
+                {
+                     new Claim(ClaimTypes.Email, user.Email!),
+                     new Claim(ClaimTypes.NameIdentifier, user.Id),
+                     new Claim(ClaimTypes.Role, role )
+                };
 
+            
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+
+                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config["JWTSecurity:SecretKey"]!));
+
+                var tokenSettings = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(claims),
+                    Expires = DateTime.Now.AddDays(30),
+                    SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
+                };
+
+                var token = tokenHandler.CreateToken(tokenSettings);
+
+                return tokenHandler.WriteToken(token);
+
+            }
         }
     }
-}

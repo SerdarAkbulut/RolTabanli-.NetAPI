@@ -1,25 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using WebApplication2.Entity;
 
-namespace WebApplication2.Controllers
+namespace WebApplication2.Data
 {
     public class SeedData
     {
         public static async void Initialize(IApplicationBuilder app)
         {
-            var scope = app.ApplicationServices.CreateScope();
+            using var scope = app.ApplicationServices.CreateScope();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>(); 
 
+            // Roller
             if (!roleManager.Roles.Any())
             {
-                var employer = new Role { Name = "Employer" };
-                var admin = new Role { Name = "Admin" };
-
-                await roleManager.CreateAsync(employer);
-                await roleManager.CreateAsync(admin);
+                await roleManager.CreateAsync(new IdentityRole("Employer"));
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
 
+            // Kullanıcılar
             if (!userManager.Users.Any())
             {
                 var personel1 = new User { Name = "Personel1", UserName = "personel1", Email = "personel1@gmail.com" };

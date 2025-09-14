@@ -7,6 +7,7 @@ using WebApplication2.Services;
 
 namespace WebApplication2.Controllers
 {
+
     [ApiController]
     [Route("api/account")]
     public class AccountController : ControllerBase
@@ -76,8 +77,9 @@ namespace WebApplication2.Controllers
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTimeOffset.UtcNow.AddDays(1)
             });
-            return Ok(new { message = "Login başarılı" });
+            return Ok(new { message = "Login başarılı" ,token});
         }
+
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDTO model)
@@ -88,18 +90,18 @@ namespace WebApplication2.Controllers
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = WebUtility.UrlEncode(token);
-            var resetUrl = $"http://localhost:3000/reset-password?email={model.Email}&token={encodedToken}";
+            var resetUrl = $"http://localhost:7008/reset-password?email={model.Email}&token={token}";
 
             await _emailService.SendEmailAsync(user.Email, "Şifre Sıfırlama",
                 $"<p>Şifrenizi sıfırlamak için <a href='{resetUrl}'>buraya tıklayın</a>. Bu bağlantı 1 saat geçerlidir.</p>");
 
-            return Ok("Şifre sıfırlama bağlantısı email adresinize gönderildi.");
+            return Ok(new { message = "Şifre sıfırlama bağlantısı email adresinize gönderildi.", encodedToken });
         }
+
+
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
         {
-
-
             if (model.NewPassword != model.ConfirmPassword)
                 return BadRequest("Yeni şifre ve tekrarı uyuşmuyor.");
 
@@ -107,7 +109,8 @@ namespace WebApplication2.Controllers
             if (user == null)
                 return BadRequest("Kullanıcı bulunamadı.");
 
-            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            var decodedToken = WebUtility.UrlDecode(model.Token); // decode ekledik
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.NewPassword);
 
             if (!result.Succeeded)
             {
