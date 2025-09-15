@@ -31,27 +31,29 @@ WebApplication2, ASP.NET Core ile geliştirilmiş, kullanıcı ve departman yön
 
 🔗 API Endpointleri
 AccountController
-Endpoint	Method	Açıklama
-/api/account/register	POST	Yeni kullanıcı kaydı
-/api/account/login	POST	Kullanıcı giriş
-/api/account/logout	POST	Çıkış yapma
-/api/account/forgot-password	POST	Şifre sıfırlama e-postası gönderme
-/api/account/reset-password	POST	Şifreyi resetleme
+| Endpoint                       | Method | Açıklama                           |
+| ------------------------------ | ------ | ---------------------------------- |
+| `/api/account/register`        | POST   | Yeni kullanıcı kaydı               |
+| `/api/account/login`           | POST   | Kullanıcı giriş                    |
+| `/api/account/logout`          | POST   | Çıkış yapma                        |
+| `/api/account/forgot-password` | POST   | Şifre sıfırlama e-postası gönderme |
+| `/api/account/reset-password`  | POST   | Şifreyi resetleme                  |
+
+| Endpoint                            | Method | Açıklama                    |
+| ----------------------------------- | ------ | --------------------------- |
+| `/api/admin/personel-list`          | GET    | Tüm personeli listeleme     |
+| `/api/admin/personel-create`        | POST   | Yeni personel oluşturma     |
+| `/api/admin/personel-update/{id}`   | PUT    | Personel güncelleme         |
+| `/api/admin/personel-delete/{id}`   | DELETE | Personel silme              |
+| `/api/admin/department-list`        | GET    | Tüm departmanları listeleme |
+| `/api/admin/create-department`      | POST   | Yeni departman oluşturma    |
+| `/api/admin/update-department/{id}` | PUT    | Departman güncelleme        |
+| `/api/admin/delete-department/{id}` | DELETE | Departman silme             |
+
+| Endpoint                       | Method | Açıklama                        |
+| ------------------------------ | ------ | ------------------------------- |
+| `/api/employer/profile`        | GET    | Profil bilgilerini görüntüleme  |
+| `/api/employer/update-profile` | PUT    | Profil güncelleme (şifre dahil) |
 
 
-AdminController (Admin Rolü)
-Endpoint	Method	Açıklama
-/api/admin/personel-list	GET	Tüm personeli listeleme
-/api/admin/personel-create	POST	Yeni personel oluşturma
-/api/admin/personel-update/{id}	PUT	Personel güncelleme
-/api/admin/personel-delete/{id}	DELETE	Personel silme
-/api/admin/department-list	GET	Tüm departmanları listeleme
-/api/admin/create-department	POST	Yeni departman oluşturma
-/api/admin/update-department/{id}	PUT	Departman güncelleme
-/api/admin/delete-department/{id}	DELETE	Departman silme
 
-
-EmployerController (Employer Rolü)
-Endpoint	Method	Açıklama
-/api/employer/profile	GET	Profil bilgilerini görüntüleme
-/api/employer/update-profile	PUT	Profil güncelleme (şifre dahil)
