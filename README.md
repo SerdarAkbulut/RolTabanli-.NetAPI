@@ -30,7 +30,7 @@ WebApplication2, ASP.NET Core ile geliştirilmiş, kullanıcı ve departman yön
 ---
 
 🔗 API Endpointleri
-AccountController
+
 | Endpoint                       | Method | Açıklama                           |
 | ------------------------------ | ------ | ---------------------------------- |
 | `/api/account/register`        | POST   | Yeni kullanıcı kaydı               |
