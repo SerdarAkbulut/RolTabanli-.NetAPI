@@ -18,6 +18,12 @@ namespace WebApplication2.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<UserDepartment>()
+       .HasOne(ud => ud.User)
+       .WithMany(u => u.UserDepartments)
+       .HasForeignKey(ud => ud.UserId)
+       .OnDelete(DeleteBehavior.Cascade);
+
          
 
         }
